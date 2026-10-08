@@ -1,259 +1,259 @@
-# Бэклог FreeBikeControl
+# FreeBikeControl backlog
 
-Цель — надёжно управлять передачами и доступными функциями MyWhoosh с двух Zwift Click V2 на Mac, iPhone и iPad, с возможностью настроить виртуальную трансмиссию под велосипед пользователя, включая GRX 400. Первая версия уже собрана, но совместимость с реальными пультами, MyWhoosh и длительная работа на iOS ещё не подтверждены. Ближайший результат — одна полноценная поездка с переключением в обе стороны, затем проверка всех целевых сценариев.
+The goal is to reliably control MyWhoosh gears and supported functions using two Zwift Click V2 controllers on Mac, iPhone and iPad, with the option to configure a virtual drivetrain for the user's bike, including GRX 400. The initial version builds, but compatibility with real controllers, MyWhoosh and sustained iOS operation is not yet confirmed. The next milestone is one complete ride with shifting in both directions, followed by validation of every target scenario.
 
-Обновлено: 8 октября 2026 года.
+Updated: October 8, 2026.
 
-## Что уже реализовано
+## Implemented so far
 
-Это исходная база для дальнейшей работы, а не список возможностей, подтверждённых на оборудовании.
+This is the starting point for further development, not a list of hardware-verified features.
 
-- SwiftUI-приложение для macOS и iOS/iPadOS.
-- Поиск Click V2, ручное подключение, подписки и handshake; попытки переподключения после обрыва.
-- Разбор текущего цифрового bitmap кнопок, обработка повторных пакетов и отпускания кнопок.
-- TCP-мост OpenBikeControl с Bonjour, разбором информации о MyWhoosh и его поддерживаемых команд.
-- Ручные кнопки проверки, назначения физических кнопок, сохранение настроек, режим правого пульта «+ / B».
-- Журнал событий, разрешения Bluetooth/локальной сети, конфигурация Bluetooth-фона iOS.
-- Панель поездки с визуальными пультами и подсветкой нажатий, подсказки подключения, отдельные настройки и диагностика, адаптация под ширину окна.
-- Сборки Mac и iOS, 21 unit-тест и локальный интеграционный тест TCP-моста прошли.
+- A SwiftUI app for macOS and iOS/iPadOS.
+- Click V2 discovery, manual connection, subscriptions and handshake; reconnection attempts after a disconnect.
+- Decoding of the current digital button bitmap, repeated packet handling and button releases.
+- An OpenBikeControl TCP bridge with Bonjour, MyWhoosh app information parsing and supported command detection.
+- On-screen test buttons, physical button mappings, saved settings and right-controller “+ / B” mode.
+- An event log, Bluetooth/local network permissions and iOS Bluetooth background configuration.
+- A ride dashboard with controller diagrams and input highlights, connection hints, separate settings and diagnostics, and adaptation to window width.
+- Mac and iOS builds, 21 unit tests and the local TCP bridge integration test have passed.
 
-Автоматическая разблокировка Click V2, предотвращение сна пульта, применение настроенных отношений передач к нагрузке и самостоятельное управление сопротивлением станка пока отсутствуют. Редактор виртуальной кассеты и передних звёзд, расчёт отношений, режимы и сохранение профиля реализованы.
+Automatic Click V2 activation, controller keep-awake, applying configured ratios to resistance and independent trainer resistance control are not yet implemented. The virtual cassette and chainring editor, ratio calculations, modes and profile persistence are implemented.
 
-## Приоритеты и ведение задач
+## Priorities and task tracking
 
-| Приоритет | Значение |
+| Priority | Meaning |
 | --- | --- |
-| P0 | Нужен, чтобы подтвердить работоспособность основной связки на оборудовании |
-| P1 | Нужен для надёжного использования во время обычной поездки |
-| P2 | Удобство и дополнительные функции после стабилизации |
-| P3 | Возможное расширение, которое нужно отдельно выбрать |
+| P0 | Required to confirm that the core setup works on hardware |
+| P1 | Required for reliable everyday riding |
+| P2 | Usability and additional features after stabilization |
+| P3 | An optional extension to select separately |
 
-По умолчанию задачи ниже имеют статус **Открыта**; исключения указаны рядом с задачей. В ходе работы менять статус на **В работе**, **Заблокирована** с конкретной причиной или **Готова**. Исследовательская задача может завершиться описанием ограничения и рабочего альтернативного сценария; зависимую реализацию это автоматически не закрывает.
+Tasks below are **Open** unless a different status is stated. Update them to **In progress**, **Blocked** with a specific reason, or **Done** as work proceeds. A research task may finish by documenting a limitation and a working alternative; that does not automatically close dependent implementation tasks.
 
-Закрывать задачу после выполнения её критериев, добавления нужных проверок и записи результата рядом с задачей. Для аппаратных проверок сохранять дату, платформу и версию ОС, версию MyWhoosh, прошивку Click, модель станка, сценарий и результат. Не считать успешную сборку доказательством работы на оборудовании.
+Close a task after meeting its acceptance criteria, adding the necessary checks and recording the outcome beside it. For hardware validation, record the date, platform and OS version, MyWhoosh version, Click firmware, trainer model, scenario and result. A successful build is not evidence of hardware compatibility.
 
-## Первый этап Реальная поездка
+## Stage 1: A real ride
 
-### FBC-001 P0 Описать оборудование и сценарии
+### FBC-001 P0 Document hardware and scenarios
 
-**Что сделать:** записать модели двух Click, их прошивки, модель и прошивку станка, наличие Cog или кассеты на станке, количество зубьев передних звёзд и полный ряд кассеты велосипеда, который нужно эмулировать, устройства, версии ОС и MyWhoosh. Проверить, представляются ли пульты двумя BLE-устройствами или одной связью.
+**Work:** Record both Click models and firmware, the trainer model and firmware, whether the trainer has a Cog or cassette, chainring tooth counts and the complete cassette sequence to emulate, devices, OS versions and MyWhoosh version. Check whether the controllers appear as two BLE devices or one connection.
 
-**Готово, когда:** заполнен паспорт комплекта и выбран первый сценарий поездки. Для каждой строки матрицы ниже указан конкретный комплект устройств или «пока нет устройства для проверки».
+**Acceptance:** The equipment record is complete and the first ride scenario is selected. Each row in the matrix below identifies a specific device combination or states that no device is available for testing yet.
 
-### FBC-002 P0 Подтвердить кнопки обоих Click V2
+### FBC-002 P0 Verify input from both Click V2 controllers
 
-**Что сделать:** проверить обнаружение, подписки, handshake, все физические кнопки и их отпускания. Сопоставить полученные пакеты с декодером; учесть парный режим, стороны пультов и различия прошивок. При необходимости добавить диагностическое сохранение сырых пакетов.
+**Work:** Test discovery, subscriptions, handshake, every physical button and button releases. Compare received packets with the decoder; account for paired mode, controller sides and firmware differences. Add raw packet capture for diagnostics if needed.
 
-**Готово, когда:** все кнопки комплекта определяются правильно, удержание не создаёт лишних переключений, отпускание снимает команду, некорректный пакет не вызывает действие. Для обнаруженных вариантов добавлены тесты с реальными пакетами.
+**Acceptance:** Every button is identified correctly; holding a button does not produce extra shifts, releasing it clears the command, and a malformed packet does not trigger an action. Add tests using real packets for discovered variants.
 
-**Зависит от:** FBC-001.
+**Dependencies:** FBC-001.
 
-### FBC-003 P0 Подтвердить переключение в MyWhoosh
+### FBC-003 P0 Verify shifting in MyWhoosh
 
-**Что сделать:** проверить обнаружение FreeBikeControl в MyWhoosh, сообщение о поддерживаемых командах, ручные кнопки и физические Click во время поездки. Проверить настройку виртуальных передач и реакцию станка в свободной езде; отдельно описать поведение в ERG-тренировке.
+**Work:** Test FreeBikeControl discovery in MyWhoosh, the supported command announcement, on-screen test buttons and physical Click input during a ride. Check virtual shifting setup and trainer response in free riding; document ERG workout behavior separately.
 
-**Готово, когда:** в первом выбранном сценарии 20 последовательных нажатий в каждую сторону дают ожидаемые изменения передачи без пропусков и дублей; изменение нагрузки соответствует поведению MyWhoosh. В журнале различимы «ввод получен», «команда отправлена» и ошибка; отправка не выдаётся за подтверждение игры.
+**Acceptance:** In the first selected scenario, 20 consecutive presses in each direction produce the expected gear changes without missed or duplicate shifts; resistance changes follow MyWhoosh behavior. The log distinguishes received input, a sent command and an error. Sending a command is not presented as game confirmation.
 
-**Зависит от:** FBC-001, FBC-002.
+**Dependencies:** FBC-001, FBC-002.
 
-### FBC-004 P0 Проверить фон на iPhone и iPad
+### FBC-004 P0 Verify background operation on iPhone and iPad
 
-**Что сделать:** проверить мост на том же устройстве, где открыт MyWhoosh, и на отдельном iPhone/iPad. Проверить переключение между приложениями, блокировку экрана устройства с мостом, приход BLE-событий и отправку TCP-команд в фоне. Если текущего режима недостаточно, исследовать поддерживаемые Apple способы продолжения сессии.
+**Work:** Test the bridge on the same device as MyWhoosh and on a separate iPhone/iPad. Test switching apps, locking the bridge device's screen, receiving BLE events and sending TCP commands in the background. If the current mode is insufficient, investigate Apple-supported ways to continue the session.
 
-**Готово, когда:** каждый заявляемый мобильный сценарий выдерживает 60 минут с переключениями в начале, середине и конце. Ограничения зафиксированы; приложение и инструкция рекомендуют проверенный способ запуска. Работа после принудительного закрытия пользователем не обещается.
+**Acceptance:** Each claimed mobile scenario lasts 60 minutes, with shifting at the beginning, middle and end. Document limitations; the app and instructions recommend a verified launch workflow. Operation after a user force-quits the app is not promised.
 
-**Зависит от:** FBC-003.
+**Dependencies:** FBC-003.
 
-### FBC-005 P0 Проверить сон и разблокировку Click V2
+### FBC-005 P0 Verify Click V2 sleep and activation
 
-**Что сделать:** измерить поведение без нажатий через 1, 5 и 15 минут, после отключения/включения пультов и на следующий день. Проверить оба пульта после подключения через Zwift и правый пульт отдельно. Исследовать подтверждённый способ поддержания активности, если пульты засыпают.
+**Work:** Measure behavior without button presses after 1, 5 and 15 minutes, after turning controllers off and on, and the next day. Test both controllers after connecting through Zwift and the right controller on its own. Investigate a verified keep-awake method if controllers fall asleep.
 
-**Готово, когда:** записаны условия, в которых кнопки доступны; выявленный сон не маскируется статусом «готов». Есть проверенный способ продолжить поездку и честная инструкция по разблокировке. Если нужен keep-awake, он проверен на комплекте пользователя и не создаёт нажатий или повторной инициализации во время удержания.
+**Acceptance:** Record the conditions under which button input is available; sleep must not be hidden behind a ready status. Provide a verified way to resume riding and an accurate activation guide. If keep-awake is needed, verify it on the user's hardware and ensure that it does not create button input or repeat initialization while a button is held.
 
-**Зависит от:** FBC-002. Проверки простоя включить в FBC-004.
+**Dependencies:** FBC-002. Include idle testing in FBC-004.
 
-## Матрица аппаратной проверки
+## Hardware validation matrix
 
-Таблица — план проверки. Сейчас все результаты **Не проверено**.
+This table is a validation plan. Every result is currently **Not tested**.
 
-| Мост FreeBikeControl | MyWhoosh | Что подтвердить | Результат |
+| FreeBikeControl bridge | MyWhoosh | What to verify | Result |
 | --- | --- | --- | --- |
-| Mac | Тот же Mac | Обнаружение, кнопки, нагрузка, длительная поездка | Не проверено |
-| iPhone | Mac | Локальная сеть, BLE и фон телефона | Не проверено |
-| Mac | iPad | Обнаружение на iPad, управление с Mac | Не проверено |
-| iPhone | iPad | Работа между мобильными устройствами, фон телефона | Не проверено |
-| iPhone | Тот же iPhone | BLE и TCP при MyWhoosh на переднем плане | Не проверено |
-| iPad | Тот же iPad | BLE и TCP при MyWhoosh на переднем плане | Не проверено |
+| Mac | Same Mac | Discovery, input, resistance and a long ride | Not tested |
+| iPhone | Mac | Local network, BLE and phone background operation | Not tested |
+| Mac | iPad | Discovery on iPad and control from Mac | Not tested |
+| iPhone | iPad | Communication between mobile devices and phone background operation | Not tested |
+| iPhone | Same iPhone | BLE and TCP while MyWhoosh is in the foreground | Not tested |
+| iPad | Same iPad | BLE and TCP while MyWhoosh is in the foreground | Not tested |
 
-Для каждой доступной строки проверить оба пульта и режим правого пульта. Недоступный комплект не считать прошедшим. Начать с Mac → тот же Mac, затем iPhone → Mac, затем остальных доступных устройств.
+Test both controllers and right-controller mode for each available row. Unavailable equipment does not count as a pass. Start with Mac → same Mac, then iPhone → Mac, then the remaining available devices.
 
-## Второй этап Надёжная ежедневная работа
+## Stage 2: Reliable everyday operation
 
-### FBC-006 P1 Упорядочить состояния подключения и ошибки
+### FBC-006 P1 Define connection states and errors
 
-**Что сделать:** ввести явные состояния поиска, подключения, подписки, handshake, получения ввода, блокировки, восстановления и остановки. Добавить таймауты незавершённых этапов; показывать причину и конкретное действие для восстановления.
+**Work:** Introduce explicit states for scanning, connecting, subscribing, handshake, input receipt, locking, recovery and stopping. Add timeouts for incomplete stages; show the cause and a concrete recovery action.
 
-**Готово, когда:** отказ разрешений, скрытый сервис, отсутствие ответа и ошибка записи не оставляют бесконечное «подключение». Остановка отменяет ожидающие действия; поздний callback не возобновляет сессию. Переходы покрыты проверками.
+**Acceptance:** Permission denial, a hidden service, no response and a write error do not leave the app connecting indefinitely. Stopping cancels pending actions; a late callback cannot resume the session. State transitions are covered by checks.
 
-### FBC-007 P1 Восстанавливать Bluetooth без ручной перенастройки
+### FBC-007 P1 Restore Bluetooth without manual reconfiguration
 
-**Что сделать:** сохранять выбранные пульты и режим подключения, восстанавливать их при новой сессии; повторять соединение с ограниченным backoff. Проверить выключение Bluetooth, разряд/сон пульта и временный выход из зоны связи.
+**Work:** Save selected controllers and connection mode, restore them in a new session and retry connections with bounded backoff. Test Bluetooth being turned off, a controller's battery draining or sleep, and temporarily moving out of range.
 
-**Готово, когда:** после возвращения устройства связь восстанавливается без повторного назначения кнопок; явное отключение или остановка отменяет retry. Нет параллельных попыток и постоянного цикла соединений с заблокированным пультом.
+**Acceptance:** When a device returns, its connection recovers without remapping buttons. Explicit disconnection or stopping cancels retries. There are no parallel attempts or continuous connection loops with a locked controller.
 
-**Зависит от:** FBC-005, FBC-006.
+**Dependencies:** FBC-005, FBC-006.
 
-### FBC-008 P1 Восстанавливать сеть и MyWhoosh
+### FBC-008 P1 Recover network and MyWhoosh connections
 
-**Что сделать:** проверить потерю Wi-Fi, смену сети, перезапуск MyWhoosh, отзыв разрешения локальной сети и второй TCP-клиент. Добавить таймаут клиента, который подключился, но не передал информацию о приложении; проверить объявление Bonjour и поведение после ошибки публикации.
+**Work:** Test Wi-Fi loss, network changes, restarting MyWhoosh, revoking local network permission and a second TCP client. Add a timeout for clients that connect without sending app information; check Bonjour advertising and behavior after an advertising failure.
 
-**Готово, когда:** мост возвращается к доступному объявлению и принимает новое подключение; зависший клиент не занимает мост бесконечно. В игру не отправляются старые команды после восстановления; журнал показывает причину обрыва и следующий шаг.
+**Acceptance:** The bridge resumes advertising and accepts a new connection; a stalled client cannot occupy it indefinitely. Old commands are not sent after recovery. The log shows the reason for the disconnect and the next step.
 
-**Зависит от:** FBC-003, FBC-006.
+**Dependencies:** FBC-003, FBC-006.
 
-### FBC-009 P1 Завершать и восстанавливать сессию целиком
+### FBC-009 P1 Stop and restore the complete session
 
-**Что сделать:** согласовать жизненный цикл Bluetooth, TCP, heartbeat и маршрутизатора кнопок. Проверить восстановление Core Bluetooth после перезапуска, закрытие окна Mac, сон/пробуждение Mac и повторное получение capabilities от MyWhoosh в активной сессии.
+**Work:** Coordinate the Bluetooth, TCP, heartbeat and button router lifecycles. Test Core Bluetooth restoration after restarting, closing the Mac window, Mac sleep/wake and receiving updated MyWhoosh capabilities during an active session.
 
-**Готово, когда:** завершение отпускает команды и останавливает ресурсы; восстановление не оставляет BLE без сетевого моста и не воспроизводит удержанный ввод. Ручная тестовая кнопка и физическая кнопка с одинаковым действием не оставляют команду нажатой.
+**Acceptance:** Stopping releases commands and stops resources. Recovery does not leave BLE running without the network bridge or replay held input. An on-screen test button and a physical button mapped to the same action do not leave the command pressed.
 
-**Зависит от:** FBC-006, FBC-007, FBC-008.
+**Dependencies:** FBC-006, FBC-007, FBC-008.
 
-### FBC-010 P1 Измерить задержку и пропуски
+### FBC-010 P1 Measure latency and missed input
 
-**Что сделать:** записывать время получения BLE-пакета и отправки команды; на реальной поездке измерить реакцию игры. Проверить быстрые одиночные нажатия, одновременные кнопки и пределы передач. Уточнить, нужна ли повторная команда при удержании, прежде чем её добавлять.
+**Work:** Record BLE packet receipt and command send times; measure game response during a real ride. Test rapid single presses, simultaneous buttons and gear limits. Determine whether a held button needs repeat commands before adding them.
 
-**Готово, когда:** сохранены результаты серии из 100 нажатий и распределение задержки с описанием метода; нет обнаруженных пропусков, дублей и зависшего состояния. Целевой предел задержки согласован по результатам измерения.
+**Acceptance:** Save results for a sequence of 100 presses and the latency distribution, including the measurement method. No missed input, duplicates or stuck states are detected. Agree on a latency target based on the measurements.
 
-**Зависит от:** FBC-003, FBC-009.
+**Dependencies:** FBC-003, FBC-009.
 
-### FBC-011 P1 Экспортировать диагностику
+### FBC-011 P1 Export diagnostics
 
-**Что сделать:** добавить экспорт ограниченного журнала с версиями приложения, ОС, прошивок, этапами подключения и временами событий. Предусмотреть включаемый диагностический режим для сырых пакетов и очистку экспортируемых идентификаторов.
+**Work:** Add export of a bounded log with app, OS and firmware versions, connection stages and event timestamps. Provide an optional diagnostic mode for raw packets and sanitize exported identifiers.
 
-**Готово, когда:** отчёт можно сохранить или отправить средствами системного Share Sheet; файл позволяет разобрать проблему подключения и не включает неожиданные личные данные. Диагностический режим выключен по умолчанию.
+**Acceptance:** The report can be saved or shared through the system Share Sheet. It helps diagnose connection issues and contains no unexpected personal data. Diagnostic mode is off by default.
 
-### FBC-012 P1 Закрепить сборки и регрессионные проверки
+### FBC-012 P1 Establish reproducible builds and regression checks
 
-**Что сделать:** сделать один воспроизводимый сценарий запуска unit-тестов, TCP-интеграции и сборок Mac/iOS; расширить проверки жизненного цикла и зависимостей, которые появятся в FBC-006–009. При подключении CI перенести туда эти проверки.
+**Work:** Create one reproducible workflow for unit tests, TCP integration and Mac/iOS builds. Extend lifecycle and dependency checks as FBC-006–009 introduce them. Move these checks to CI when CI is added.
 
-**Готово, когда:** одна команда даёт ненулевой exit code при любом провале и проходит на чистом checkout с Xcode. Сохранена короткая инструкция аппаратной регрессии; тесты с реальным MyWhoosh не подменяются mock-клиентом.
+**Acceptance:** One command returns a nonzero exit code for any failure and passes on a clean checkout with Xcode. Keep a short hardware regression guide; tests with real MyWhoosh are not replaced by a mock client.
 
-### FBC-013 P1 Подготовить установку на устройства
+### FBC-013 P1 Prepare device installation
 
-**Что сделать:** выбрать минимальные версии ОС, проверить signing и entitlements, собрать подписанную Mac-версию и установить iOS-версию на физические iPhone/iPad. Подготовить иконку, версию приложения и инструкцию установки; выбрать способ доставки следующего билда.
+**Work:** Select minimum OS versions, verify signing and entitlements, build a signed Mac version and install the iOS version on physical iPhone/iPad devices. Prepare an icon, app version and installation guide; choose a way to deliver the next build.
 
-**Готово, когда:** приложение запускается на целевых устройствах вне ручного запуска из Xcode, разрешения запрашиваются корректно, процедура обновления описана. Для TestFlight или App Store создать отдельную задачу публикации после выбора этого способа.
+**Acceptance:** The app launches on target devices independently of a manual Xcode run, permissions are requested correctly and the update procedure is documented. Create a separate publication task if TestFlight or the App Store is selected.
 
-**Зависит от:** FBC-004, FBC-012.
+**Dependencies:** FBC-004, FBC-012.
 
-## Третий этап Удобство и дополнительные команды
+## Stage 3: Usability and additional commands
 
-### FBC-014 P2 Провести пользователя через первое подключение
+### FBC-014 P2 Guide the user through initial pairing
 
-**Статус:** В работе. Добавлены динамический следующий шаг, три индикатора подключения и справка. Необходима проверка понятности на реальном первом подключении и мобильных сценариях.
+**Status:** In progress. Dynamic next-step hints, three connection indicators and help are implemented. Their clarity needs testing during a real first connection and mobile scenarios.
 
-**Что сделать:** пошаговая настройка комплекта и режима обоих/правого пульта, проверка разрешений, тест нажатия и подключение MyWhoosh. Различать найденное устройство, установленную связь и подтверждённый ввод; показывать сторону пульта, если она определена.
+**Work:** Provide step-by-step setup for the hardware and both-controller/right-controller modes, permission checks, button input testing and MyWhoosh pairing. Distinguish a discovered device, an established connection and confirmed input; show controller sides when identified.
 
-**Готово, когда:** новый пользователь проходит настройку без чтения кода и получает понятный следующий шаг при блокировке Click или отсутствии MyWhoosh.
+**Acceptance:** A new user completes setup without reading code and receives an actionable next step when Click is locked or MyWhoosh is missing.
 
-**Зависит от:** FBC-005, FBC-006, FBC-008.
+**Dependencies:** FBC-005, FBC-006, FBC-008.
 
-### FBC-015 P2 Сделать удобный редактор назначений
+### FBC-015 P2 Provide a convenient button mapping editor
 
-**Статус:** В работе. Реализованы схемы двух Click, подсветка физических нажатий, открытие назначения по нажатию схемы, отметки недоступных команд и явное поведение B в режиме правого пульта. Сохранение/сброс уже работают; требуется проверка с обоими пультами.
+**Status:** In progress. Implemented diagrams of both Click controllers, physical input highlights, mapping edits by tapping a diagram, unsupported command labels and explicit B behavior in right-controller mode. Persistence and reset already work; testing with both controllers is still required.
 
-**Что сделать:** отображение двух пультов, подсветка полученного нажатия, изменение назначения по нажатию кнопки и профили «оба пульта»/«правый пульт». Отмечать команды, которые не поддерживает подключённая версия MyWhoosh.
+**Work:** Show both controllers, highlight received input, allow mapping edits by tapping a button and provide both-controller/right-controller profiles. Mark commands unsupported by the connected MyWhoosh version.
 
-**Готово, когда:** настройки сохраняются, режим правого пульта не скрывает поведение B, изменение профиля во время удержания не вызывает неожиданную команду. Доступен сброс.
+**Acceptance:** Settings persist; right-controller mode does not hide B's behavior, and changing profiles while a button is held does not produce an unexpected command. Reset is available.
 
-### FBC-016 P2 Проверить дополнительные команды MyWhoosh
+### FBC-016 P2 Verify additional MyWhoosh commands
 
-**Что сделать:** проверить steering, меню, подтверждение/назад, камеру, интенсивность тренировки и паузу. Разделить команды, объявленные приложением, и фактически работающие в конкретном режиме езды.
+**Work:** Test steering, menu, confirm/back, camera, workout intensity and pause. Distinguish commands advertised by the app from those that actually work in each ride mode.
 
-**Готово, когда:** есть матрица команд по версии MyWhoosh и режиму; каждая предлагаемая функция проверена физической кнопкой. Неподдерживаемые команды объяснены в редакторе назначений.
+**Acceptance:** Maintain a command matrix by MyWhoosh version and mode; verify every offered feature with a physical button. Explain unsupported commands in the mapping editor.
 
-**Зависит от:** FBC-003, FBC-015.
+**Dependencies:** FBC-003, FBC-015.
 
-### FBC-017 P2 Добавить обратную связь и режим поездки
+### FBC-017 P2 Add feedback and a ride mode
 
-**Что сделать:** по желанию включаемые звук/вибрация на устройстве с мостом, компактный экран состояния, поддержка крупных элементов и VoiceOver. Рассмотреть меню-бар на Mac и Live Activity на iOS после проверки платформенных возможностей.
+**Work:** Add optional sound/vibration on the bridge device, a compact status screen, large controls and VoiceOver support. Consider a Mac menu bar item and an iOS Live Activity after checking platform capabilities.
 
-**Готово, когда:** обратная связь означает отправленную команду, а не неподтверждённую смену передачи; номер передачи и достижение предела не показываются без данных игры. Функции можно отключить, они не мешают MyWhoosh.
+**Acceptance:** Feedback indicates a sent command, not an unconfirmed gear change. Do not show gear numbers or limits without game data. Features can be disabled and do not interfere with MyWhoosh.
 
-### FBC-018 P2 Упростить разблокировку обоих Click V2
+### FBC-018 P2 Simplify activation of both Click V2 controllers
 
-**Что сделать:** исследовать воспроизводимый сценарий взаимодействия со Zwift, ограничения прошивок и сохранение разблокировки. Оценить возможность автоматизации; до подтверждения оставить понятный ручной сценарий.
+**Work:** Investigate a reproducible Zwift workflow, firmware limitations and persistence of activation. Assess automation; retain a clear manual workflow until feasibility is confirmed.
 
-**Готово, когда:** записан результат исследования, доступные шаги и ограничения. Если автоматизация реализуема, создать отдельную задачу с протокольными доказательствами и аппаратными критериями; не объявлять задачу реализации выполненной только по результату исследования.
+**Acceptance:** Record research findings, available steps and limitations. If automation is feasible, create a separate task with protocol evidence and hardware acceptance criteria. Research alone does not complete the implementation task.
 
-**Зависит от:** FBC-005.
+**Dependencies:** FBC-005.
 
-## Настраиваемая трансмиссия под велосипед пользователя
+## A configurable drivetrain for the user's bike
 
-Требование пользователя: менять количество передач и их передаточные отношения, чтобы тренировка ощущалась как езда на своём велосипеде с GRX 400. После уточнения пользователя приоритет — штатные передачи MyWhoosh; собственное применение профиля отложено. Редактор конфигурации уже реализован; применение профиля к реальному переключению и нагрузке пока отсутствует.
+The user's request is to change gear counts and ratios so training feels like riding their own GRX 400 bike. After clarification, built-in MyWhoosh gears take priority; applying a custom profile is deferred. The configuration editor is implemented, but applying the profile to actual shifting and resistance is not.
 
-Для варианта GRX 2×10 с FC-RX600-10 Shimano указывает передние звёзды 46/30. Это возможный начальный профиль, а не подтверждение комплектации велосипеда пользователя. Нужны его реальные передние звёзды и полный ряд зубьев кассеты; один диапазон 11–36 не определяет все ступени. [Спецификация Shimano](https://bike.shimano.com/en-UK/products/components/pdp.P-FC-RX600-10.html).
+For the GRX 2×10 configuration with FC-RX600-10, Shimano lists 46/30 chainrings. This is a possible starting profile, not confirmation of the user's bike specification. Actual chainrings and the complete cassette sequence are needed; the 11–36 range alone does not identify every gear. [Shimano specification](https://bike.shimano.com/en-UK/products/components/pdp.P-FC-RX600-10.html).
 
-Комплект пользователя: передние звёзды **46/30 подтверждены**; кассета велосипеда **11–36 подтверждена**, точная модель и полный ряд зубьев ещё требуют уточнения. Станок **Wahoo KICKR CORE 2 подтверждён**; версию прошивки и установленный на станке Cog или кассету ещё нужно уточнить. Диапазон 11–36 использовать для профиля пользователя; промежуточные звёзды не заполнять догадками.
+User equipment: **46/30 chainrings confirmed**; **11–36 bike cassette confirmed**, with its exact model and full tooth sequence still to be clarified. **Wahoo KICKR CORE 2 confirmed**; its firmware version and installed Cog or cassette still need clarification. Use 11–36 for the user's profile; do not guess intermediate sprockets.
 
-Передаточное отношение рассчитывается как число зубьев передней звезды / число зубьев задней звезды. Для 2×10 есть 20 комбинаций положений, но отношения могут совпадать или быть близкими. Режим переднего и заднего переключателя сохраняет эти комбинации; последовательный режим должен явно задавать их порядок и правила перехода между передними звёздами.
+Gear ratio is calculated as chainring teeth / rear sprocket teeth. A 2×10 setup has 20 position combinations, but ratios may coincide or be close. Separate front and rear shifting preserves these combinations; sequential mode must explicitly define their order and transitions between chainrings.
 
-### FBC-023 P1 Выбрать способ применения собственных передаточных отношений
+### FBC-023 P1 Choose a way to apply custom gear ratios
 
-**Что сделать:** проверить настройки и интерфейсы текущего MyWhoosh для количества передач, зубьев звёзд и кассеты или произвольных отношений. OpenBikeControl описывает относительное переключение и выбор позиции передачи/передней/задней звезды, но эти команды сами по себе не передают таблицу зубьев. Проверить фактические capabilities игры и способы синхронизации выбранного положения.
+**Work:** Check the current MyWhoosh settings and interfaces for gear counts, chainring and cassette teeth, or arbitrary ratios. OpenBikeControl describes relative shifting and selection of a gear/chainring/sprocket position, but these commands alone do not transmit a tooth-count table. Check the game's actual capabilities and ways to synchronize the selected position.
 
-**Готово, когда:** выбран и записан подтверждённый путь: конфигурация в самой игре, доступный интерфейс её настройки или управление станком через FBC-019. Для каждого пути описаны ограничения. Выбор номера передачи не выдаётся за применение произвольного отношения, а локальное ограничение количества передач — за изменение трансмиссии MyWhoosh.
+**Acceptance:** Select and document a verified path: configuration inside the game, an available configuration interface, or trainer control through FBC-019. Describe each path's limitations. Selecting a gear number must not be presented as applying an arbitrary ratio, and locally limiting the gear count must not be presented as changing MyWhoosh's drivetrain.
 
-**Зависит от:** FBC-001, FBC-003. Исследование можно начать до стабилизации мобильного фона.
+**Dependencies:** FBC-001, FBC-003. Research can begin before mobile background operation is stabilized.
 
-**Источник:** [OpenBikeControl Gear Shifting](https://github.com/OpenBikeControl/openbikecontrol-protocol/blob/main/PROTOCOL.md).
+**Source:** [OpenBikeControl Gear Shifting](https://github.com/OpenBikeControl/openbikecontrol-protocol/blob/main/PROTOCOL.md).
 
-### FBC-024 P1 Добавить редактируемые профили трансмиссии
+### FBC-024 P1 Add editable drivetrain profiles
 
-**Статус:** В работе. Реализованы редактируемые зубья передних/задних звёзд, количество ступеней по длине ряда, расчёт отношений и шагов, сохранение/восстановление одного профиля, стартовая передача, раздельный режим и последовательный порядок по отношению. Добавлены 7 тестов модели и сохранения; обе сборки прошли. Редактор явно обозначен как предпросмотр. Осталось подтвердить точный ряд кассеты пользователя; произвольный порядок последовательного ряда и несколько именованных профилей не реализованы. Применение к станку остаётся в FBC-023/FBC-019/FBC-025.
+**Status:** In progress. Implemented editable chainring/sprocket teeth, gear counts derived from the sequence length, ratio and step calculations, persistence and restoration of one profile, a starting gear, separate mode and sequential ordering by ratio. Added 7 model and persistence tests; both builds passed. The editor is clearly marked as a preview. The user's full cassette sequence still needs confirmation; arbitrary sequential ordering and multiple named profiles are not implemented. Applying the profile to the trainer remains part of FBC-023/FBC-019/FBC-025.
 
-**Что сделать:** модель и редактор количества передних и задних звёзд, числа зубьев каждой звезды, таблицы отношений и пользовательского последовательного ряда. Добавить сохраняемый профиль велосипеда, стартовую передачу и режимы «передний/задний переключатель» и «последовательное переключение». Подготовить редактируемый профиль GRX 2×10; точную кассету заполнить по оборудованию пользователя.
+**Work:** Build a model and editor for chainring/sprocket counts, each tooth count, the ratio table and a custom sequential order. Add a saved bike profile, starting gear and separate front/rear and sequential shifting modes. Prepare an editable GRX 2×10 profile; fill in the exact cassette using the user's equipment.
 
-**Готово, когда:** количество ступеней соответствует введённым звёздам, отношения рассчитаны точно, недопустимые числа зубьев отклоняются, настройки сохраняются и восстанавливаются. Показаны сочетание звёзд, отношение и шаг между передачами. Есть тесты расчётов, границ и совпадающих отношений. Если профиль ещё не влияет на игру/станок, интерфейс явно обозначает его как конфигурацию/предпросмотр.
+**Acceptance:** Gear counts match the entered chainrings/sprockets, ratios are calculated accurately, invalid tooth counts are rejected, and settings persist and restore. Show the chainring/sprocket combination, ratio and step between gears. Add tests for calculations, boundaries and equal ratios. If the profile does not yet affect the game/trainer, the interface clearly labels it as configuration/preview.
 
-**Зависит от:** FBC-001. Модель можно реализовывать параллельно исследованию FBC-023; подключение к реальной нагрузке зависит от результата исследования.
+**Dependencies:** FBC-001. The model can be implemented alongside FBC-023 research; connection to real resistance depends on the research outcome.
 
-### FBC-019 P1 Реализовать применение профиля к станку при необходимости
+### FBC-019 P1 Apply the profile to the trainer if necessary
 
-**Что сделать:** если FBC-023 не найдёт подходящий интерфейс MyWhoosh, исследовать и реализовать мост управления Wahoo KICKR CORE 2 пользователя. Проверить доступные транспорты и команды на его прошивке; наличие виртуального переключения в Zwift не считать доказательством возможности задать собственные отношения в MyWhoosh. Учесть протокол станка, его механическую передачу или Cog, мощность, каденс, уклон от игры и владение соединением. Определить, как MyWhoosh передаёт режим и уклон мосту, а мост передаёт управление и телеметрию; исключить одновременные противоречащие команды игры и приложения.
+**Work:** If FBC-023 finds no suitable MyWhoosh interface, investigate and implement a control bridge for the user's Wahoo KICKR CORE 2. Verify available transports and commands on its firmware; Zwift virtual shifting support is not evidence that custom ratios can be applied in MyWhoosh. Account for the trainer protocol, mechanical gearing or Cog, power, cadence, game-provided gradient and connection ownership. Determine how MyWhoosh sends mode and gradient to the bridge and how the bridge sends control and telemetry; prevent simultaneous conflicting commands from the game and app.
 
-**Готово, когда:** профиль действительно меняет нагрузку на выбранном станке при одинаковых условиях, учитываются уклон и режим ERG, измеренная мощность не подменяется ради виртуальной скорости. Пределы нагрузки и поведение при потере связи заданы; поездка подтверждает корректные переходы. Если управление профилем возможно через MyWhoosh, задача отмечается «Не требуется» с основанием вместо реализации лишнего транспорта.
+**Acceptance:** The profile actually changes resistance on the selected trainer under the same conditions, accounts for gradient and ERG mode, and does not falsify measured power to change virtual speed. Define resistance limits and connection-loss behavior; a ride verifies correct transitions. If profile control is available through MyWhoosh, mark this task “Not required” with the reason instead of implementing an unnecessary transport.
 
-**Зависит от:** FBC-001, FBC-023, FBC-024. Прежняя задача расширения повышена с P3 до P1 в связи с запросом пользователя.
+**Dependencies:** FBC-001, FBC-023, FBC-024. This former optional extension was raised from P3 to P1 at the user's request.
 
-### FBC-025 P1 Связать Click с профилем и проверить ощущения передач
+### FBC-025 P1 Connect Click input to the profile and verify gear feel
 
-**Что сделать:** назначить +/− на выбранный режим переключения, отдельные кнопки на переднюю звезду для режима 2×10. Проверить начало сессии, крайние положения, перезапуск, потерю связи и изменение профиля. Отделять локально выбранную передачу от подтверждённой игрой/станком, если обратной связи нет.
+**Work:** Map +/− to the selected shifting mode and separate chainring buttons for 2×10 mode. Test session start, limits, restarting, connection loss and profile changes. Distinguish a locally selected gear from one confirmed by the game/trainer when feedback is unavailable.
 
-**Готово, когда:** изменение количества ступеней ограничивает реальные переключения, отношение каждой ступени применяется выбранным транспортом и проверено на станке пользователя. В режиме 2×10 передняя и задняя звёзды переключаются независимо; в последовательном режиме соблюдается заданный порядок. Нет обхода пределов, неожиданной смены после восстановления связи или изменения нагрузки от одного лишь открытия редактора. Пользователь подтверждает соответствие ступеней своему велосипеду в пределах возможностей станка; совпадение со всеми ощущениями езды на улице не обещается.
+**Acceptance:** Changing the gear count limits actual shifts; each gear's ratio is applied through the selected transport and verified on the user's trainer. In 2×10 mode, front and rear gears shift independently; sequential mode follows the configured order. There are no bypassed limits, unexpected changes after reconnection or resistance changes caused merely by opening the editor. The user confirms that gear steps match their bike within the trainer's capabilities; reproducing every sensation of outdoor riding is not promised.
 
-**Зависит от:** FBC-002, FBC-023, FBC-024 и выбранного транспорта; FBC-019, если нужен мост станка.
+**Dependencies:** FBC-002, FBC-023, FBC-024 and the selected transport; FBC-019 if a trainer bridge is required.
 
-## Возможные расширения
+## Optional extensions
 
-Эти задачи не входят в первую стабильную версию. Выбирать их после первого и второго этапов.
+These tasks are outside the first stable version. Select them after stages 1 and 2.
 
-| ID | Приоритет | Направление | Критерий выбора и готовности |
+| ID | Priority | Area | Selection and acceptance criteria |
 | --- | --- | --- | --- |
-| FBC-020 | P3 | Другие прошивки и контроллеры | Выбрать конкретное устройство или вариант прошивки. Добавить отдельный декодер/handshake, реальные пакетные тесты и аппаратную проверку; не расширять распознавание догадками. |
-| FBC-021 | P3 | Другие приложения для езды | Выбрать приложение, транспорт и команды. Готовность — отдельная матрица проверенных функций и поездка с этим приложением. |
-| FBC-022 | P3 | Запись тренировок и Apple Health | Выбрать источник мощности/каденса/пульса и необходимость записи. Готовность — проверенная запись с корректными единицами, разрешениями и отсутствием дублей. |
+| FBC-020 | P3 | Other firmware and controllers | Select a specific device or firmware variant. Add a separate decoder/handshake, real packet tests and hardware validation; do not broaden detection by guessing. |
+| FBC-021 | P3 | Other cycling apps | Select an app, transport and commands. Completion requires a separate verified feature matrix and a ride with that app. |
+| FBC-022 | P3 | Workout recording and Apple Health | Select a power/cadence/heart-rate source and determine whether recording is needed. Completion requires a verified recording with correct units, permissions and no duplicates. |
 
-## Порядок ближайшей работы
+## Next steps
 
-1. FBC-001 — записать комплект пользователя.
-2. FBC-002 и FBC-003 — получить нажатия и реальную смену передачи в MyWhoosh на Mac.
-3. FBC-005 — проверить простой пультов и ежедневную разблокировку.
-4. FBC-004 — пройти мобильные сценарии и длительную поездку.
-5. FBC-006–009 — устранить обнаруженные проблемы восстановления и жизненного цикла.
-6. FBC-010–013 — закрепить измерения, диагностику, проверки и установку.
-7. Собственные отношения передач (FBC-023, FBC-024, FBC-019, FBC-025) отложены: пользователь предпочёл штатную трансмиссию MyWhoosh, если она подходит. Редактор сохранён; вернуться к применению профиля только при необходимости после проверки MyShift на оборудовании.
-8. FBC-014–018 — улучшать настройку и дополнительные функции по выбранным задачам.
+1. FBC-001 — record the user's hardware.
+2. FBC-002 and FBC-003 — receive input and verify actual MyWhoosh shifting on Mac.
+3. FBC-005 — test controller idle behavior and daily activation.
+4. FBC-004 — complete mobile scenarios and a long ride.
+5. FBC-006–009 — fix discovered recovery and lifecycle issues.
+6. FBC-010–013 — establish measurements, diagnostics, checks and installation.
+7. Custom ratios (FBC-023, FBC-024, FBC-019, FBC-025) are deferred: the user prefers MyWhoosh's built-in drivetrain if it meets their needs. Keep the editor; return to applying profiles only if needed after hardware testing of MyShift.
+8. FBC-014–018 — improve setup and additional features through selected tasks.
 
-Для следующей итерации можно указать ID задачи, например: «берём FBC-002». После завершения обновлять этот файл и соответствующие ограничения в README.
+For the next iteration, specify a task ID, for example, “take FBC-002.” After completing work, update this file and the corresponding limitations in README.

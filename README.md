@@ -1,63 +1,63 @@
 # FreeBikeControl
 
-Нативный SwiftUI-мост Zwift Click V2 → MyWhoosh для macOS, iPhone и iPad.
+A native SwiftUI bridge from Zwift Click V2 to MyWhoosh for macOS, iPhone and iPad.
 
-## План дальнейшей работы
+## Roadmap
 
-[Бэклог](BACKLOG.md) содержит приоритеты, зависимости, критерии готовности и матрицу проверки на Mac, iPhone и iPad. Следующие итерации можно выбирать по ID задачи. Редактор виртуальной трансмиссии уже доступен; применение её отношений к MyWhoosh/станку остаётся в FBC-023, FBC-019 и FBC-025.
+The [backlog](BACKLOG.md) lists priorities, dependencies, acceptance criteria and the validation matrix for Mac, iPhone and iPad. Pick the next iteration by task ID. The virtual drivetrain editor is available; applying its ratios to MyWhoosh or the trainer remains part of FBC-023, FBC-019 and FBC-025.
 
-## Запуск
+## Getting started
 
-Для самостоятельного запуска на Mac собери Release-артефакт командой `bash scripts/build-macos.sh` из этой папки. Готовый ZIP: `artifacts/FreeBikeControl-macOS.zip`. Распакуй и перенеси `freeBikeControl.app` в «Программы», затем открой его из Finder. Перед запуском заверши отладочную копию в Xcode. Скрипт проверяет локальную ad-hoc подпись и сохраняет необходимые sandbox-разрешения; это сборка для собственного Mac, без Developer ID и нотарификации для публичного распространения. Архитектура выбирается Xcode для текущего Mac.
+To run independently on your Mac, build a Release artifact with `bash scripts/build-macos.sh` from this directory. The ZIP is saved to `artifacts/FreeBikeControl-macOS.zip`. Extract it, move `freeBikeControl.app` to Applications and open it in Finder. Stop the debug instance in Xcode before launching it. The script verifies the local ad-hoc signature and preserves the required sandbox entitlements. This is a build for your own Mac, without Developer ID signing or notarization for public distribution. Xcode selects the architecture for the current Mac.
 
-1. Открой `freeBikeControl.xcodeproj`, выбери **My Mac** или физический iPhone/iPad и нажми Run. Для iOS проверь свою Team в Signing & Capabilities.
-2. Нажми **Start ride**, разреши Bluetooth и локальную сеть.
-3. Нажми кнопку на пульте, затем **Connect** рядом с найденным Click. Подключение Bluetooth и получение кнопок показываются отдельно. Убедись, что нажатия появились в журнале.
-4. В актуальном MyWhoosh открой экран подключений, нажми значок **OpenBikeControl** и подтверди подключение **FreeBikeControl**.
-5. Станок подключай непосредственно к MyWhoosh как power source / controllable trainer. Включи виртуальные передачи в настройках игры и начни поездку.
-6. Проверь ручные кнопки передачи в FreeBikeControl, затем физические кнопки Click.
+1. Open `freeBikeControl.xcodeproj`, select **My Mac** or a physical iPhone/iPad, and click Run. For iOS, check your Team under Signing & Capabilities.
+2. Click **Start ride** and allow Bluetooth and local network access.
+3. Press a button on a controller, then click **Connect** next to the discovered Click. Bluetooth connection and confirmed button input are shown separately. Check that button presses appear in the log.
+4. In the current version of MyWhoosh, open the pairing screen, select **OpenBikeControl** and confirm the **FreeBikeControl** connection.
+5. Connect your trainer directly to MyWhoosh as the power source / controllable trainer. Enable virtual shifting in the game settings and start a ride.
+6. Test the on-screen shifting buttons in FreeBikeControl, then the physical Click buttons.
 
-Можно запускать мост и MyWhoosh на одном Mac или на разных устройствах в одной локальной сети. Для сценария на одном iPhone/iPad сначала установи соединения в FreeBikeControl, затем открой MyWhoosh. На iOS объявлен фоновой режим `bluetooth-central` и восстановление Core Bluetooth; работа во время длительной поездки ещё не проверена на устройстве. Не закрывай мост принудительно.
+The bridge and MyWhoosh can run on the same Mac or on separate devices on the same local network. On a single iPhone/iPad, establish connections in FreeBikeControl first, then open MyWhoosh. iOS declares the `bluetooth-central` background mode and Core Bluetooth state restoration; operation during a long ride has not yet been verified on a device. Do not force-quit the bridge.
 
-## Настройка виртуальной кассеты
+## Configuring a virtual cassette
 
-В разделе **Settings → Bike profile** укажи передние звёзды (например, `46, 30`) и полный ряд зубьев кассеты по возрастанию. Можно вводить запятые, пробелы, `;` или `/`. Число задних передач определяется количеством введённых звёзд; можно настроить от 1 до 30 ступеней и от 1 до 3 передних звёзд.
+Under **Settings → Bike profile**, enter your chainrings (for example, `46, 30`) and the complete cassette tooth sequence in ascending order. Commas, spaces, `;` and `/` are accepted. The number of sprockets determines the rear gear count; you can configure 1–30 rear gears and 1–3 chainrings.
 
-Для кассеты пользователя подтверждён диапазон 11–36, но промежуточные звёзды ещё неизвестны, поэтому поле кассеты изначально пустое. Диапазон `11–36` не заменяет полный ряд. Выбери режим раздельного или последовательного переключения, стартовую передачу и нажми **Save profile**. Раскрой таблицу, чтобы увидеть отношения и шаги. В последовательном режиме комбинации отсортированы от лёгкой к тяжёлой; одинаковые отношения не удаляются.
+The user's cassette range is confirmed as 11–36, but the intermediate sprockets are still unknown, so the cassette field starts empty. The `11–36` range does not replace the complete sequence. Choose separate or sequential shifting, select a starting gear and click **Save profile**. Expand the table to see ratios and gear steps. In sequential mode, combinations are sorted from easiest to hardest; equal ratios are retained.
 
-**Это пока сохранённая конфигурация и предпросмотр.** Профиль ещё не управляет передачами MyWhoosh или нагрузкой KICKR CORE 2. Физические Click продолжают работать через прежние назначения команд. Следующая задача — проверить транспорт применения отношений.
+**This is currently a saved configuration and preview.** The profile does not yet control MyWhoosh gears or KICKR CORE 2 resistance. Physical Click controllers continue to use their existing command mappings. The next task is to verify a transport for applying gear ratios.
 
 ## Click V2
 
-Поддерживается текущий цифровой формат `0x23`, active-low protobuf bitmap. UUID сервисов: `FC82` и старый Zwift custom service. Приложение подписывается на уведомления до handshake и не считает пульт готовым, пока не получит пакет кнопок. Повторные пакеты не вызывают повторные команды. Обрыв связи отпускает кнопки; удержанный ввод не воспроизводится после переподключения.
+The current digital `0x23` format is supported, using an active-low protobuf bitmap. Service UUIDs include `FC82` and the legacy Zwift custom service. The app subscribes to notifications before the handshake and does not consider a controller ready until a button packet is received. Repeated packets do not repeat commands. Disconnecting releases buttons; held input is not replayed after reconnection.
 
-Левый Click V2 может требовать ежедневной активации через Zwift. Подключи оба пульта в Zwift, убедись, что они работают, затем закрой Zwift, чтобы он освободил Bluetooth, и подключи пульты здесь. Сохранение разблокировки зависит от прошивки; это не гарантируется. Если левый пульт недоступен, подключи правый и включи **Right controller only: + shifts up, B shifts down**.
+The left Click V2 may require daily activation through Zwift. Connect both controllers in Zwift and confirm that they work, then close Zwift to release Bluetooth and connect them here. Whether activation persists depends on the firmware and is not guaranteed. If the left controller is unavailable, connect the right one and enable **Right controller only: + shifts up, B shifts down**.
 
-Автоматическая разблокировка через Zwift и специальный механизм предотвращения сна Click V2 **не реализованы**. Если пульт перестал передавать кнопки, разбуди его кнопкой и проверь журнал. Парные пульты на некоторых прошивках могут представляться одной Bluetooth-связью — проверяй получение нажатий обоих пультов, а не количество устройств в списке.
+Automatic Zwift activation and a dedicated Click V2 keep-awake mechanism are **not implemented**. If a controller stops sending button input, wake it with a button press and check the log. On some firmware versions, paired controllers may appear as a single Bluetooth connection. Verify input from both controllers rather than counting devices in the list.
 
-## Интерфейс
+## Interface
 
-Интерфейс, подсказки, сообщения и запросы разрешений переведены на английский.
+The interface, hints, messages and permission descriptions are in English.
 
-На экране **Ride** показаны шаги подключения, схемы обоих Click с подсветкой физических нажатий, состояние MyWhoosh и доступные команды проверки. Нажатие кнопки на схеме открывает её назначение. На Mac и широком iPad карточки расположены в две колонки, на узких экранах — в одну.
+The **Ride** screen shows connection steps, diagrams of both Click controllers with physical button highlights, MyWhoosh status and supported test commands. Tapping a diagram button opens its mapping. Cards use two columns on Mac and a wide iPad, and one column on narrower screens.
 
-**Settings** содержат назначения и сохранённый профиль велосипеда; **Diagnostics** — устройства и журнал. Подсказка следующего шага зависит от текущего соединения. Передачи по умолчанию использует MyWhoosh; редактор собственного профиля необязателен и пока служит предпросмотром.
+**Settings** contains button mappings and the saved bike profile; **Diagnostics** contains devices and the event log. The next-step hint follows the current connection state. MyWhoosh manages gears by default; the custom profile editor is optional and currently provides a preview.
 
-## Возможности
+## Features
 
-- Поиск, ручное подключение, автоматическое переподключение выбранных пультов.
-- Переключение передач и другие команды, которые MyWhoosh объявляет поддерживаемыми.
-- Сохранение назначений кнопок и режима правого пульта.
-- TCP-сервер OpenBikeControl с Bonjour, информацией о приложении и проверкой его возможностей.
-- Ручные кнопки проверки и ограниченный журнал диагностики.
+- Discovery, manual connection and automatic reconnection of selected controllers.
+- Gear shifting and other commands advertised as supported by MyWhoosh.
+- Saved button mappings and right-controller mode.
+- An OpenBikeControl TCP server with Bonjour, app information and capability checks.
+- On-screen test buttons and a bounded diagnostic log.
 
-Это первая версия, не полная замена BikeControl. Она не управляет сопротивлением станка самостоятельно, не записывает тренировки, не подтверждает изменение передачи в игре и не показывает выдуманный номер передачи. Редактор трансмиссии реализован, применение его отношений к нагрузке пока отсутствует. Не реализованы другие контроллеры, старые варианты bitmap и шифрованный протокол. Необходима проверка с реальным Click V2, его прошивкой и MyWhoosh на каждой целевой платформе. iOS Simulator не подходит для тестирования Bluetooth.
+This is an initial version, not a complete replacement for BikeControl. It does not independently control trainer resistance, record workouts, confirm gear changes in the game or display a made-up gear number. The drivetrain editor is implemented, but applying its ratios to resistance is not. Other controllers, older bitmap formats and the encrypted protocol are not implemented. Real Click V2 hardware, its firmware and MyWhoosh need testing on each target platform. The iOS Simulator is unsuitable for Bluetooth testing.
 
-## Проверки
+## Validation
 
-Текущие deployment targets исходного Xcode-проекта: iOS 26.2 и macOS 15.7.
+Current deployment targets in the Xcode project are iOS 26.2 and macOS 15.7.
 
-Из этой папки:
+Run from this directory:
 
 ```sh
 DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test --scratch-path /tmp/freebike-core-tests
@@ -67,14 +67,14 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun swiftc -parse-as-
 /tmp/freebike-bridge-smoke
 ```
 
-21 unit-тест проверяют bitmap кнопок, некорректные protobuf-пакеты, разбиение и объединение TCP-сообщений, capabilities, повторные уведомления и удержанные кнопки при переподключении/смене назначений. Отдельный интеграционный тест запускает production TCP-мост и локальный клиент, проверяет конкретные байты press/release и очистку после отключения. Эти проверки не подтверждают совместимость с физическими пультами или MyWhoosh.
+21 unit tests cover button bitmaps, malformed protobuf packets, fragmented and coalesced TCP messages, capabilities, repeated notifications, held buttons during reconnection or remapping, and drivetrain calculations and persistence. A separate integration test runs the production TCP bridge and a local client, verifying exact press/release bytes and cleanup after disconnection. These checks do not confirm compatibility with physical controllers or MyWhoosh.
 
-## Источники протоколов
+## Protocol references
 
-Реализация на Swift написана для этого проекта. BikeControl не включён как библиотека; публичные материалы использованы для сверки протокольных UUID, handshake и актуальных bit positions.
+The Swift implementation was written for this project. BikeControl is not included as a library; public materials were used to cross-check protocol UUIDs, the handshake and current bit positions.
 
 - [OpenBikeControl specification](https://github.com/OpenBikeControl/openbikecontrol-protocol) — MIT.
 - [Click V2 transport reference](https://github.com/OpenBikeControl/bikecontrol/tree/main/lib/bluetooth/devices/zwift).
 - [Core Bluetooth background processing](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html).
 
-FreeBikeControl не связан со Zwift, MyWhoosh или разработчиками BikeControl.
+FreeBikeControl is not affiliated with Zwift, MyWhoosh or the developers of BikeControl.
