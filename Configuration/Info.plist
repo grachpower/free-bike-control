@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>NSBluetoothAlwaysUsageDescription</key><string>Connect your Zwift Click controllers to control MyWhoosh.</string>
+<key>NSBluetoothPeripheralUsageDescription</key><string>Connect your Bluetooth cycling controllers.</string>
+<key>NSLocalNetworkUsageDescription</key><string>Send Zwift Click commands to MyWhoosh on this device or over your local network.</string>
+<key>NSBonjourServices</key><array><string>_openbikecontrol._tcp</string></array>
+<key>UIBackgroundModes</key><array><string>bluetooth-central</string></array>
+</dict></plist>

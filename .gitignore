@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Xcode local state
+*.xcuserstate
+xcuserdata/
+
+# Build and distribution outputs
+DerivedData/
+build/
+artifacts/
+*.app/
+*.xcarchive/
+*.dSYM/
+*.ipa
